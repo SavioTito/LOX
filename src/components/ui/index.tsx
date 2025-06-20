@@ -7,3 +7,8 @@ export * as DialogUi from "@/components/ui/dialog";
 export * as PopoverUi from "@/components/ui/popover";
 export * as SheetUi from "@/components/ui/sheet";
 export * as TableUi from "@/components/ui/table";
+export * as AccordionUi from "@/components/ui/accordion";
+export * as AlertUi from "@/components/ui/alert";
+export * as AlertDialogUi from "@/components/ui/alert-dialog";
+export * as AvatarUi from "@/components/ui/avatar";
+export * as NavigationMenuUi from "@/components/ui/navigation-menu";
