@@ -1,4 +1,6 @@
-import type { Metadata } from "next";
+"use client";
+
+import { usePathname } from "next/navigation";
 import { Geist, Inter } from "next/font/google";
 import "./globals.css";
 import MenuManager from "@/components/menu-manager";
@@ -13,23 +15,23 @@ const interMono = Inter({
     subsets: ["latin"],
 });
 
-export const metadata: Metadata = {
+{/*export const metadata: Metadata = {
     title: "LOX | Gerencie eventos de forma eficaz",
     description: "Sistema de gerenciamento de eventos universitários",
     icons: "/images/lox-favicon.svg",
-};
+};*/}
 
-export default function RootLayout({
-    children,
-}: Readonly<{
-    children: React.ReactNode;
-}>) {
+export default function RootLayout({ children, }: Readonly<{ children: React.ReactNode; }>) {
+    const pathname = usePathname();
+    const noHeaderFooter = ["/login", "/register", "/reset-password", "/dashboard"];
+    const hideHeaderFooter = noHeaderFooter.includes(pathname);
+
     return (
         <html lang="en">
-            <body
-                className={`${geistSans.variable} ${interMono.variable} antialiased`}
-            >
-                <MenuManager />
+            <body className={`${geistSans.variable} ${interMono.variable} antialiased`}>
+                {!hideHeaderFooter && (
+                    <MenuManager />
+                )}
                 {children}
             </body>
         </html>
