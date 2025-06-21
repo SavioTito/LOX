@@ -145,7 +145,12 @@ const data = {
     ],
 }
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+export function AppSidebar({
+    onCreateClick,
+    ...props
+}: React.ComponentProps<typeof Sidebar> & {
+    onCreateClick?: () => void
+}) {
     return (
         <Sidebar collapsible="offcanvas" {...props}>
             <SidebarHeader>
@@ -169,7 +174,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 </SidebarMenu>
             </SidebarHeader>
             <SidebarContent>
-                <NavMain items={data.navMain} />
+                <NavMain items={data.navMain} onCreateClick={onCreateClick} />
                 <NavDocuments items={data.documents} />
                 <NavSecondary items={data.navSecondary} className="mt-auto" />
             </SidebarContent>

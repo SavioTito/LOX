@@ -176,7 +176,7 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
         enableHiding: false,
     },
     {
-        accessorKey: "type",
+        accessorKey: "Categoria",
         header: "Categoria",
         cell: ({ row }) => (
             <div className="w-32">
@@ -201,8 +201,8 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
         ),
     },
     {
-        accessorKey: "target",
-        header: () => <div className="w-full text-right">Inscritos</div>,
+        accessorKey: "Inscritos",
+        header: () => <div className="w-full text-left">Inscritos</div>,
         cell: ({ row }) => (
             <form
                 onSubmit={(e) => {
@@ -223,8 +223,8 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
         ),
     },
     {
-        accessorKey: "limit",
-        header: () => <div className="w-full text-right">Custo</div>,
+        accessorKey: "Preço",
+        header: () => <div className="w-full text-left">Preço</div>,
         cell: ({ row }) => (
             <form
                 onSubmit={(e) => {
@@ -237,7 +237,7 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
                 }}
             >
                 <Label htmlFor={`${row.original.id}-limit`} className="sr-only">
-                    Limit
+                    Preço
                 </Label>
                 <p>{row.original.limit}</p>
 
@@ -245,7 +245,7 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
         ),
     },
     {
-        accessorKey: "reviewer",
+        accessorKey: "Organizador",
         header: "Organizador",
         cell: ({ row }) => {
             const isAssigned = row.original.reviewer !== "Assign reviewer"
@@ -515,7 +515,7 @@ export function DataTable({
                 <div className="flex items-center justify-between px-4">
                     <div className="text-muted-foreground hidden flex-1 text-sm lg:flex">
                         {table.getFilteredSelectedRowModel().rows.length} de{" "}
-                        {table.getFilteredRowModel().rows.length} linhas(s) selecionadas.
+                        {table.getFilteredRowModel().rows.length} linha(s) selecionadas.
                     </div>
                     <div className="flex w-full items-center gap-8 lg:w-fit">
                         <div className="hidden items-center gap-2 lg:flex">
