@@ -1,6 +1,9 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
+import { useRouter } from "next/navigation"
+import { toast } from "sonner"
+import { supabase } from "@/lib/supabase"
 import { AppSidebar } from "@/components/app-sidebar"
 import { ChartAreaInteractive } from "@/components/chart-area-interactive"
 import { DataTable } from "@/components/data-table"
@@ -15,7 +18,29 @@ import data from "./data.json"
 import { CreateEventDialog } from "@/components/CreateEventDialog"
 
 export default function Page() {
+    const router = useRouter()
     const [dialogOpen, setDialogOpen] = useState(false)
+    const [loading, setLoading] = useState(true)
+
+
+    useEffect(() => {
+        const checkSession = async () => {
+            const { data, error } = await supabase.auth.getSession()
+
+            if (error || !data.session) {
+                toast.error("Sessão expirada ou inválida.")
+                router.push("/login")
+            } else {
+                setLoading(false)
+            }
+        }
+
+        checkSession()
+    }, [router])
+
+    if (loading) {
+        return <div className="p-4 text-center">Verificando sessão...</div>
+    }
 
     return (
         <SidebarProvider

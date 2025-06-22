@@ -1,7 +1,7 @@
 import Link from "next/link"
 import Image from "next/image"
-import { LoginForm } from "@/components/login-form"
-import logotipo from "../../../public/images/lox-logo.svg"
+import { SignupForm } from "@/components/signup-form"
+import logotipo from "../../../../public/images/lox-logo.svg"
 
 export default function LoginPage() {
     return (
@@ -17,7 +17,7 @@ export default function LoginPage() {
                         />
                     </div>
                 </Link>
-                <LoginForm />
+                <SignupForm />
             </div>
         </div>
     )

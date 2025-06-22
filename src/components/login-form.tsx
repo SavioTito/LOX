@@ -1,5 +1,9 @@
 "use client"
 
+import { useState } from "react"
+import { useRouter } from "next/navigation"
+import { toast } from "sonner"
+import { supabase } from "@/lib/supabase"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import {
@@ -12,10 +16,37 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 
-export function LoginForm({
-    className,
-    ...props
-}: React.ComponentProps<"div">) {
+export function LoginForm({ className, ...props }: React.ComponentProps<"div">) {
+
+    const [form, setForm] = useState({ email: "", password: "" })
+    const [loading, setLoading] = useState(false)
+    const router = useRouter()
+
+    const handleChange = (field: string, value: string) => {
+        setForm((prev) => ({ ...prev, [field]: value }))
+    }
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault()
+        setLoading(true)
+
+        const { error } = await supabase.auth.signInWithPassword({
+            email: form.email.trim(),
+            password: form.password,
+        })
+
+        setLoading(false)
+
+        if (error) {
+            toast.error("Falha ao entrar: " + error.message, { duration: 6000 })
+            return
+        }
+
+        toast.success("Login realizado com sucesso!")
+        router.push("/dashboard")
+    }
+
+
     return (
         <div className={cn("flex flex-col gap-6", className)} {...props}>
             <Card>
@@ -26,7 +57,7 @@ export function LoginForm({
                     </CardDescription>
                 </CardHeader>
                 <CardContent>
-                    <form>
+                    <form onSubmit={handleSubmit}>
                         <div className="grid gap-6">
                             <div className="flex flex-col gap-4">
                                 <Button variant="outline" className="w-full cursor-not-allowed" onClick={(e) => e.preventDefault()}>
@@ -61,6 +92,8 @@ export function LoginForm({
                                         type="email"
                                         placeholder="Endereço de e-mail"
                                         required
+                                        value={form.email}
+                                        onChange={(e) => handleChange("email", e.target.value)}
                                     />
                                 </div>
                                 <div className="grid gap-3">
@@ -73,15 +106,25 @@ export function LoginForm({
                                             Esqueceu a palavra-passe?
                                         </a>
                                     </div>
-                                    <Input id="password" type="password" required />
+                                    <Input
+                                        id="password"
+                                        type="password"
+                                        required
+                                        value={form.password}
+                                        onChange={(e) => handleChange("password", e.target.value)}
+                                    />
                                 </div>
-                                <Button type="submit" className="w-full bg-green-600">
-                                    Login
+                                <Button
+                                    type="submit"
+                                    className="w-full bg-green-600"
+                                    disabled={loading}
+                                >
+                                    {loading ? "Entrando..." : "Entrar"}
                                 </Button>
                             </div>
                             <div className="text-center text-sm">
                                 Não tem uma conta?{" "}
-                                <a href="#" className="underline underline-offset-4">
+                                <a href="/signup" className="underline underline-offset-4">
                                     Sign up
                                 </a>
                             </div>

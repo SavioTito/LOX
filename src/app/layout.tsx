@@ -2,8 +2,10 @@
 
 import { usePathname } from "next/navigation";
 import { Geist, Inter } from "next/font/google";
+import { Toaster } from "@/components/ui/sonner";
 import "./globals.css";
 import MenuManager from "@/components/menu-manager";
+
 
 const geistSans = Geist({
     variable: "--font-geist-sans",
@@ -23,7 +25,7 @@ const interMono = Inter({
 
 export default function RootLayout({ children, }: Readonly<{ children: React.ReactNode; }>) {
     const pathname = usePathname();
-    const noHeaderFooter = ["/login", "/register", "/reset-password", "/dashboard"];
+    const noHeaderFooter = ["/login", "/signup", "/reset-password", "/dashboard"];
     const hideHeaderFooter = noHeaderFooter.includes(pathname);
 
     return (
@@ -32,6 +34,7 @@ export default function RootLayout({ children, }: Readonly<{ children: React.Rea
                 {!hideHeaderFooter && (
                     <MenuManager />
                 )}
+                <Toaster />
                 {children}
             </body>
         </html>

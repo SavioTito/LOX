@@ -15,6 +15,7 @@ import {
     SelectItem,
     SelectValue,
 } from "@/components/ui/select"
+import { toast } from "sonner"
 import { supabase } from "@/lib/supabase"
 
 export function CreateEventDialog({
@@ -50,7 +51,7 @@ export function CreateEventDialog({
         } = await supabase.auth.getUser()
 
         if (userError || !user) {
-            console.error("Usuário não autenticado")
+            toast.error("Usuário não autenticado.")
             return
         }
 
@@ -75,12 +76,14 @@ export function CreateEventDialog({
         const { error } = await supabase.from("events").insert([newEvent])
 
         if (error) {
-            console.error("Erro ao criar evento:", error)
+            console.log("Erro ao criar evento: ", error)
+            toast.error("Erro ao criar evento. Tenta de novo ou fala com o suporte.")
             return
         }
 
-        console.log("Evento criado com sucesso:", newEvent)
-        onOpenChange(false) // Fecha o dialog
+
+        toast.success("Evento criado com sucesso!")
+        onOpenChange(false)
     }
 
 
