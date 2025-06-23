@@ -1,6 +1,7 @@
 "use client"
 
 import * as React from "react"
+import { getEvents } from "@/lib/get-events"
 import {
     closestCenter,
     DndContext,
@@ -105,6 +106,8 @@ import {
     TabsTrigger,
 } from "@/components/ui/tabs"
 
+type RowData = z.infer<typeof schema>
+
 export const schema = z.object({
     id: z.number(),
     header: z.string(),
@@ -176,7 +179,7 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
         enableHiding: false,
     },
     {
-        accessorKey: "Categoria",
+        accessorKey: "Category",
         header: "Categoria",
         cell: ({ row }) => (
             <div className="w-32">
@@ -330,11 +333,11 @@ function DraggableRow({ row }: { row: Row<z.infer<typeof schema>> }) {
 }
 
 export function DataTable({
-    data: initialData,
+
 }: {
     data: z.infer<typeof schema>[]
 }) {
-    const [data, setData] = React.useState(() => initialData)
+    const [data, setData] = React.useState<RowData[]>([])
     const [rowSelection, setRowSelection] = React.useState({})
     const [columnVisibility, setColumnVisibility] =
         React.useState<VisibilityState>({})
@@ -393,6 +396,15 @@ export function DataTable({
             })
         }
     }
+
+    React.useEffect(() => {
+        async function fetchData() {
+            const result = await getEvents()
+            setData(result)
+        }
+
+        fetchData()
+    }, [])
 
     return (
         <Tabs
