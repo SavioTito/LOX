@@ -25,6 +25,7 @@ export function CreateEventDialog({
     open: boolean
     onOpenChange: (open: boolean) => void
 }) {
+    const [loading, setLoading] = useState(false)
     const [form, setForm] = useState({
         title: "",
         category: "",
@@ -43,8 +44,8 @@ export function CreateEventDialog({
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
+        setLoading(true)
 
-        // Garante que o usuário está logado
         const {
             data: { user },
             error: userError,
@@ -52,10 +53,10 @@ export function CreateEventDialog({
 
         if (userError || !user) {
             toast.error("Usuário não autenticado.")
+            setLoading(false)
             return
         }
 
-        // Gera código de referência (opcional)
         const generateRefCode = () =>
             Math.random().toString(36).substring(2, 8).toUpperCase()
 
@@ -64,25 +65,32 @@ export function CreateEventDialog({
             title: form.title,
             category: form.category,
             description: form.description,
-            date: form.startTime.split("T")[0],
-            start_time: form.startTime.split("T")[1],
-            end_time: form.endTime.split("T")[1],
+            date: form.startTime.split("T")[0],       // data de início
+            start_time: form.startTime.split("T")[1], // hora de início
+            end_date: form.endTime.split("T")[0],     // data de fim
+            end_time: form.endTime.split("T")[1],     // hora de fim
+            seats: form.seats ? parseInt(form.seats, 10) : null, // se não preencher, vai null
             price: parseFloat(form.price || "0"),
             organizer: form.organizer,
             reference_code: generateRefCode(),
             created_by: user.id,
         }
 
-        const { error } = await supabase.from("events").insert([newEvent])
+        const { data, error } = await supabase.from("events").insert([newEvent])
+
+        console.log("🔎 Payload enviado pro Supabase:", newEvent);
+        console.log("📦 Resultado do insert:", { data, error });
 
         if (error) {
-            console.log("Erro ao criar evento: ", error)
+            console.error("🧨 Erro ao criar evento:", JSON.stringify(error, null, 2))
             toast.error("Erro ao criar evento. Tenta de novo ou fala com o suporte.")
+            setLoading(false)
             return
         }
 
 
         toast.success("Evento criado com sucesso!")
+        setLoading(false)
         onOpenChange(false)
     }
 
@@ -207,7 +215,9 @@ export function CreateEventDialog({
 
                     {/* Botão */}
                     <DialogUi.DialogFooter >
-                        <Button type="submit" disabled={!isFormValid} className={!isFormValid ? "opacity-50 cursor-not-allowed" : ""}>Criar Evento</Button>
+                        <Button type="submit" disabled={!isFormValid || loading} className={`${(!isFormValid || loading) ? "opacity-50 cursor-not-allowed" : ""}`}>
+                            {loading ? "Criando Evento..." : "Criar Evento"}
+                        </Button>
                     </DialogUi.DialogFooter>
                 </form>
 

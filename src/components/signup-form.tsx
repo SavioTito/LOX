@@ -25,6 +25,8 @@ export function SignupForm({ className, ...props }: React.ComponentProps<"div">)
         password: "",
         confirmPassword: "",
     })
+    const [loading, setLoading] = useState(false)
+
 
     const router = useRouter()
 
@@ -34,11 +36,13 @@ export function SignupForm({ className, ...props }: React.ComponentProps<"div">)
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
+        setLoading(true)
 
         if (form.password !== form.confirmPassword) {
             toast.error("As senhas não coincidem.", {
                 duration: 6000,
             })
+            setLoading(false)
             return
         }
 
@@ -52,6 +56,7 @@ export function SignupForm({ className, ...props }: React.ComponentProps<"div">)
             toast.error("Erro ao registrar: " + error?.message, {
                 duration: 6000,
             })
+            setLoading(false)
             return
         }
 
@@ -76,6 +81,7 @@ export function SignupForm({ className, ...props }: React.ComponentProps<"div">)
         toast.success("Conta criada com sucesso!", {
             duration: 6000,
         })
+        setLoading(false)
         router.push("/login")
     }
 
@@ -121,7 +127,7 @@ export function SignupForm({ className, ...props }: React.ComponentProps<"div">)
                                     <Input
                                         id="password"
                                         type="password"
-                                        placeholder="xxxxxxxx"
+                                        placeholder="Palavra-se"
                                         required
                                         value={form.password}
                                         onChange={(e) => handleChange("password", e.target.value)}
@@ -132,14 +138,18 @@ export function SignupForm({ className, ...props }: React.ComponentProps<"div">)
                                     <Input
                                         id="password"
                                         type="password"
-                                        placeholder="xxxxxxxx"
+                                        placeholder="Repita a palavra-passe"
                                         required
                                         value={form.confirmPassword}
                                         onChange={(e) => handleChange("confirmPassword", e.target.value)}
                                     />
                                 </div>
-                                <Button type="submit" className="w-full bg-green-600">
-                                    Registrar-se
+                                <Button
+                                    type="submit"
+                                    className="w-full bg-green-600"
+                                    disabled={loading}
+                                >
+                                    {loading ? "Registrando..." : "Registrar-se"}
                                 </Button>
                             </div>
                             <div className="text-center text-sm">

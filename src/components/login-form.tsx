@@ -118,6 +118,7 @@ export function LoginForm({ className, ...props }: React.ComponentProps<"div">) 
                                     <Input
                                         id="password"
                                         type="password"
+                                        placeholder="Palavra-passe"
                                         required
                                         value={form.password}
                                         onChange={(e) => handleChange("password", e.target.value)}
