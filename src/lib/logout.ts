@@ -9,10 +9,12 @@ export async function logout() {
   const { error } = await supabase.auth.signOut();
 
   if (error) {
-    toast.error("Erro ao terminar sessão: " + error.message);
+    toast.error("Erro ao terminar sessão: " + error.message, {
+      duration: 6000,
+    });
     return;
   }
 
-  toast.success("Sessão encerrada!");
+  toast.success("Sessão encerrada!", { duration: 6000 });
   redirect("/login");
 }

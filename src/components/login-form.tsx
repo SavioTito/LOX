@@ -35,16 +35,25 @@ export function LoginForm({ className, ...props }: React.ComponentProps<"div">) 
             password: form.password,
         })
 
-        setLoading(false)
-
         if (error) {
-            toast.error("Falha ao entrar: " + error.message, { duration: 6000 })
+            toast.error("Algo correu mal ao fazer login. Tenta novamente!", { duration: 6000 })
+            setLoading(false)
             return
         }
 
-        toast.success("Login realizado com sucesso!")
-        router.push("/dashboard")
+        toast.success("Login realizado com sucesso!", { duration: 6000 })
+
+        // Dá um tempo pro Supabase salvar a sessão nos cookies
+        setTimeout(() => {
+            router.replace("/dashboard") // garante navegação full, substituindo
+            router.refresh() // força atualização dos server components
+        }, 300)
+
+        setLoading(false)
     }
+
+
+
 
 
     return (
