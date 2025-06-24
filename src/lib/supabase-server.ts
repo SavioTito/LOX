@@ -1,20 +1,33 @@
-import { createServerClient } from "@supabase/ssr";
+// lib/supabase-server.ts
+import { createServerClient, type CookieOptions } from "@supabase/ssr";
 import { cookies } from "next/headers";
 
 export const createSupabaseServerClient = () => {
-  const cookieStore = cookies(); // <- isso aqui é síncrono e correto
+  const cookieStore = cookies();
 
   return createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {
       cookies: {
-        get: (name: string) => cookieStore.get(name)?.value,
-        set: async () => {
-          // Não implementado (opcional)
+        get(name: string) {
+          return cookieStore.get(name)?.value;
         },
-        remove: async () => {
-          // Não implementado (opcional)
+        set(name: string, value: string, options: CookieOptions) {
+          try {
+            cookieStore.set({ name, value, ...options });
+          } catch (error) {
+            // Handle errors if needed
+            console.log(error);
+          }
+        },
+        remove(name: string, options: CookieOptions) {
+          try {
+            cookieStore.set({ name, value: "", ...options });
+          } catch (error) {
+            // Handle errors if needed
+            console.log(error);
+          }
         },
       },
     }

@@ -69,7 +69,7 @@ export function CreateEventDialog({
             start_time: form.startTime.split("T")[1], // hora de início
             end_date: form.endTime.split("T")[0],     // data de fim
             end_time: form.endTime.split("T")[1],     // hora de fim
-            seats: form.seats ? parseInt(form.seats, 10) : null, // se não preencher, vai null
+            seats: form.seats ? parseInt(form.seats, 10) : null,
             price: parseFloat(form.price || "0"),
             organizer: form.organizer,
             reference_code: generateRefCode(),
