@@ -25,7 +25,7 @@ const interMono = Inter({
 
 export default function RootLayout({ children, }: Readonly<{ children: React.ReactNode; }>) {
     const pathname = usePathname();
-    const noHeaderFooter = ["/login", "/signup", "/reset-password", "/dashboard"];
+    const noHeaderFooter = ["/login", "/signup", "/reset-password", "/dashboard", "/portal"];
     const hideHeaderFooter = noHeaderFooter.includes(pathname);
 
     return (

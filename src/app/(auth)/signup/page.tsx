@@ -1,6 +1,6 @@
 import Link from "next/link"
 import Image from "next/image"
-import { SignupForm } from "@/components/signup-form"
+import { SignupForm } from "@/components/auth/signup-form"
 import logotipo from "../../../../public/images/lox-logo.svg"
 
 export default function LoginPage() {

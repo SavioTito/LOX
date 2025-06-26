@@ -30,7 +30,7 @@ export function LoginForm({ className, ...props }: React.ComponentProps<"div">) 
         e.preventDefault()
         setLoading(true)
 
-        const { error } = await supabase.auth.signInWithPassword({
+        const { data: authData, error } = await supabase.auth.signInWithPassword({
             email: form.email.trim(),
             password: form.password,
         })
@@ -41,11 +41,32 @@ export function LoginForm({ className, ...props }: React.ComponentProps<"div">) 
             return
         }
 
+        const { data: profile, error: profileError } = await supabase
+            .from('profiles')
+            .select('role')
+            .eq('id', authData.user?.id)
+            .single()
+
+        if (profileError || !profile) {
+            toast.error("Perfil do usuário não encontrado")
+            setLoading(false)
+            return
+        }
+
         toast.success("Login realizado com sucesso!", { duration: 6000 })
+
+        // Redireciona baseado na role
+        let redirectPath = '/portal'
+
+        if (profile.role === 'admin') {
+            redirectPath = '/dashboard'
+        } else if (profile.role === 'participant') {
+            redirectPath = '/portal'
+        }
 
         // Dá um tempo pro Supabase salvar a sessão nos cookies
         setTimeout(() => {
-            router.replace("/dashboard") // garante navegação full, substituindo
+            router.replace(redirectPath) // garante navegação full, substituindo
             router.refresh() // força atualização dos server components
         }, 300)
 
