@@ -28,7 +28,7 @@ export default function RoleGuard({
         }
     }, [user, profile, isLoading, allowedRoles, router]);
 
-    if (isLoading) return <div>Loading...</div>;
+    if (isLoading) return <div className="w-full h-[100vh] text-green-700 font-bold flex items-center justify-center">Buscando os dados...</div>;
     if (!user || !profile || !profile.role) return null;
 
     return <>{children}</>;
